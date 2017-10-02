@@ -49,3 +49,22 @@ Para la evaluación del comportamiento de las variables fueron utilizadas varios
 La siguiente figura muestra la pantalla inicial para el proceso de selección:
 En este caso se obtuvo además los valores indicativos del comportamiento del I de Moran presentado en un diagrama de moran y el cual va cambiando en función de los datos y la selección previa realizada por el usuario.
 
+![img](/img/img4.png)
+
+
+![img](/img/img5.png)
+
+
+Mapa en leaflet del resultado de la I de Moran según el tipo de autocorrelación, además se representa la etiqueta que resulta de seleccionar con el mouse uno de las entidades, mostrando la entidad federativa seguido de los valores de la variable seleccionada para el año evaluado.
+
+![img](/img/img6.png)
+
+
+![img](/img/img7.png)
+
+La siguiente imagen representa un ejemplo del resultado obtenido de manera conjunta
+En este módulo del proyecto es posible obtener dada la selección del tipo de vecindad que se quiera evaluar, y para la selección de la variable objeto de estudio, el valor del índice de moran y los niveles de agrupamiento (dispersión) de la misma dado el año seleccionado.
+
+En el ejemplo de la figura se muestran los resultados para una vecindad de reina, la variable de estudio es la precipitación total anual para el año 2004, en los resultados es posible apreciar que se obtuvo un valor de I de Moran = 0.36, siendo significativa la formación de clúster alto-alto para los estados de Yucatán (32.82mm), Quintana Roo (31.89mm), Campeche (32.62mm) y Tabasco (32.53mm), para el caso de la formación de clúster bajo-bajo son significativos los resultados para el Estado de México (23.12mm) e Hidalgo (23,93mm), el resto de los estados sus valores son no-significativos. 
+
+![img](/img/img8.png)
