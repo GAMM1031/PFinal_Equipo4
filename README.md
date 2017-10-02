@@ -52,7 +52,7 @@ En este caso se obtuvo además los valores indicativos del comportamiento del I 
 ![img](/img/img4.png)
 
 
-
+![img](/img/img5.png)
 
 
 Mapa en leaflet del resultado de la I de Moran según el tipo de autocorrelación, además se representa la etiqueta que resulta de seleccionar con el mouse uno de las entidades, mostrando la entidad federativa seguido de los valores de la variable seleccionada para el año evaluado.
