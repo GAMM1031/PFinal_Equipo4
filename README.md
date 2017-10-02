@@ -68,3 +68,9 @@ En este módulo del proyecto es posible obtener dada la selección del tipo de v
 En el ejemplo de la figura se muestran los resultados para una vecindad de reina, la variable de estudio es la precipitación total anual para el año 2004, en los resultados es posible apreciar que se obtuvo un valor de I de Moran = 0.36, siendo significativa la formación de clúster alto-alto para los estados de Yucatán (32.82mm), Quintana Roo (31.89mm), Campeche (32.62mm) y Tabasco (32.53mm), para el caso de la formación de clúster bajo-bajo son significativos los resultados para el Estado de México (23.12mm) e Hidalgo (23,93mm), el resto de los estados sus valores son no-significativos. 
 
 ![img](/img/img8.png)
+
+
+
+# ACCESO A LOS COGIGOS FUENTES [ACCESO A LOS COGIGOS FUENTES][] 
+
+[ACCESO A LOS COGIGOS FUENTES]: https://github.com/GAMM1031/PFinal_Equipo4/blob/master/codigos%20/server
