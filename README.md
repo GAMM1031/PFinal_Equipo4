@@ -1,4 +1,4 @@
-# PFinal_Equipo     
+# Poyecto Final    Equipo4     
 ## Objetivos :
 Este proyecto está enfocado en realizar un estudio del comportamiento de las variables climáticas de Precipitación y Temperatura a partir de una serie histórica que comprende el periodo 2004-2016, las variables son estudiadas a partir de la obtención de:
 
