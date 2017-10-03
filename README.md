@@ -665,8 +665,12 @@ Para lo cual se vuelve hacer uso de las condiciones `if` y `else if`, para poder
 
 ````
  
-### [ACCESO A LOS CODIGOS FUENTES] 
+### ACCESO A LOS CODIGOS FUENTES 
 [server]
-[server]: https://github.com/GAMM1031/PFinal_Equipo4/blob/master/codigos/server.R
+
 [ui]
+
+
+[server]: https://github.com/GAMM1031/PFinal_Equipo4/blob/master/codigos/server.R
+
 [ui]: https://github.com/GAMM1031/PFinal_Equipo4/blob/master/codigos/ui.R
