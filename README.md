@@ -70,7 +70,149 @@ En el ejemplo de la figura se muestran los resultados para una vecindad de reina
 ![img](/img/img8.png)
 
 
+## METODOLOGÍA
+Antes de comenzar, necesitamos cargar (o instalar primero, en caso de que no estén ya instaladas) las librerías que vamos a usar:
 
-# ACCESO A LOS COGIGOS FUENTES [ACCESO A LOS COGIGOS FUENTES][] 
 
-[ACCESO A LOS COGIGOS FUENTES]: https://github.com/GAMM1031/PFinal_Equipo4/blob/master/codigos%20/server
+```` R
+library(shiny)
+library(rgdal)
+library(leaflet)
+library(sp)
+library(spdep)
+library(ggplot2)
+library(GISTools)
+library(RColorBrewer)
+library(leaflet)
+library(DT)
+library(dplyr)
+library(reshape2)
+library(scales)
+library(extrafont)
+````
+
+
+## Se leen los datos de entrada
+clima <- readOGR("clima.shp", verbose = FALSE, stringsAsFactors = FALSE, GDAL1_integer64_policy = T)
+###### #Los vecinos de todos los estados QUEEN
+clima.nbq <- poly2nb(clima, queen = T)
+clima.nbq.w <- nb2listw(clima.nbq)
+###### #Los vecinos de todos los estados ROOK
+clima.nbr <- poly2nb(clima, queen = F)
+clima.nbr.w <- nb2listw(clima.nbr)
+###### #Las coordenadas de los centroides de los estados
+coords <- coordinates(clima)
+
+
+## Se crea la primer pestaña 
+
+Donde se hace uso de las condiciones `if` y `else if`, para poder desplegar la información de las cuatro variables climáticas, que son precipitación, temperatura media, temperatura máxima y temperatura minima:
+
+
+
+
+```` R
+shinyServer(function(input, output) {
+  
+  year <- reactive({ 
+    as.character(input$year) 
+  })
+  
+  data <- reactive({
+    if (input$rad == 1) {
+      data <- switch(year(), 
+                     "2004" = clima$PR04,
+                     "2005" = clima$PR05, 
+                     "2006" = clima$PR06,
+                     "2007" = clima$PR07,
+                     "2008" = clima$PR08,
+                     "2009" = clima$PR09,
+                     "2010" = clima$PR10,
+                     "2011" = clima$PR11,
+                     "2012" = clima$PR12,
+                     "2013" = clima$PR13,
+                     "2014" = clima$PR14,
+                     "2015" = clima$PR15,
+                     "2016" = clima$PR16)
+    } else if (input$rad == 2) {
+      data <- switch(year(), 
+                     "2004" = clima$TMIN04,
+                     "2005" = clima$TMIN05, 
+                     "2006" = clima$TMIN06,
+                     "2007" = clima$TMIN07,
+                     "2008" = clima$TMIN08,
+                     "2009" = clima$TMIN09,
+                     "2010" = clima$TMIN10,
+                     "2011" = clima$TMIN11,
+                     "2012" = clima$TMIN12,
+                     "2013" = clima$TMIN13,
+                     "2014" = clima$TMIN14,
+                     "2015" = clima$TMIN15,
+                     "2016" = clima$TMIN16)
+    } else if (input$rad == 3) {
+      data <- switch(year(), 
+                     "2004" = clima$TMED04,
+                     "2005" = clima$TMED05, 
+                     "2006" = clima$TMED06,
+                     "2007" = clima$TMED07,
+                     "2008" = clima$TMED08,
+                     "2009" = clima$TMED09,
+                     "2010" = clima$TMED10,
+                     "2011" = clima$TMED11,
+                     "2012" = clima$TMED12,
+                     "2013" = clima$TMED13,
+                     "2014" = clima$TMED14,
+                     "2015" = clima$TMED15,
+                     "2016" = clima$TMED16)
+    } else {
+      data <- switch(year(), 
+                     "2004" = clima$TMAX04,
+                     "2005" = clima$TMAX05, 
+                     "2006" = clima$TMAX06,
+                     "2007" = clima$TMAX07,
+                     "2008" = clima$TMAX08,
+                     "2009" = clima$TMAX09,
+                     "2010" = clima$TMAX10,
+                     "2011" = clima$TMAX11,
+                     "2012" = clima$TMAX12,
+                     "2013" = clima$TMAX13,
+                     "2014" = clima$TMAX14,
+                     "2015" = clima$TMAX15,
+                     "2016" = clima$TMAX16)
+    }
+    
+  })
+  
+  etiq <- reactive({
+    if (input$rad == 1) {
+      etiq = "PrecipitaciÃ³n total registrada en el aÃ±o"
+    } else if (input$rad == 2) {
+      etiq = "Temperatura mÃ­nima promedio en el aÃ±o"
+    } else if (input$rad == 3) {
+      etiq = "Temperatura promedio en el aÃ±o"
+    }  else {
+      etiq = "Temperatura mÃ¡xima promedio en el aÃ±o"
+    }
+  })
+  
+  et <- reactive({
+    if (input$rad == 1) {
+      et = "en mm de lÃ¡mina de lluvia"
+    }  else {
+      et = "en Â°C"
+    }
+  })
+  
+  plt <- reactive({
+    if (input$rad == 1) {
+      plt = "Blues"
+    }  else {
+      plt = "YlOrRd"
+    }
+  })
+  
+````
+
+
+
+### [ACCESO A LOS COGIGOS FUENTES]: https://github.com/GAMM1031/PFinal_Equipo4/blob/master/codigos%20/server
