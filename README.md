@@ -1,4 +1,4 @@
-# Poyecto Final    Equipo4     
+# Proyecto Final    Equipo4     
 ## Objetivos :
 Este proyecto está enfocado en realizar un estudio del comportamiento de las variables climáticas de Precipitación y Temperatura a partir de una serie histórica que comprende el periodo 2004-2016, las variables son estudiadas a partir de la obtención de:
 
@@ -511,7 +511,7 @@ Para lo cual se vuelve hacer uso de las condiciones `if` y `else if`, para poder
     })
  ````
 
-#### Se crea una serie de condicionantes usando `if` y `else if`, esto para desplegar el mapa del análisis lisa de acuerdo con el tipo de vecindad seleccionadao
+#### Se crea una serie de condicionantes usando `if` y `else if`, esto para desplegar el mapa del análisis LISA de acuerdo con el tipo de vecindad seleccionadao
 
 
  ````R
@@ -530,7 +530,140 @@ Para lo cual se vuelve hacer uso de las condiciones `if` y `else if`, para poder
     })
  ````
  
+#### Se realiza la impresión del mapa y elementos caracteristicos del análisis LISA
+ 
+ ````R
+     clima$var <- var
+    clima$var_lag <- lag.listw(clima_weights(), var)
+    
+    varStd <- (var - mean(var))/sd(var)
+    lagStd <- lag.listw(clima_weights(), scale(var))
+    
+    mean <- mean(var)
+    lag_mean <- mean(clima$var_lag) 
+    
+    global_moran <- moran.test(var, clima_weights())
+    statistic <- (global_moran$estimate)
+    statistic <- round(statistic, 2)
+    lisa <- localmoran(var, clima_weights())
+    
+    clima$cuadrante <- c(rep(0,length(var)))
+    significance <- 0.05
+    vec <- ifelse(lisa[,5] < significance, 1,0)
+    
+    clima$cuadrante[var >= mean & clima$var_lag >= lag_mean]  <- 1
+    clima$cuadrante[var < mean & clima$var_lag < lag_mean]  <- 2
+    clima$cuadrante[var < mean & clima$var_lag >= lag_mean]  <- 3
+    clima$cuadrante[var >= mean & clima$var_lag < lag_mean]  <- 4
+    clima$cuadrante.data <- clima$cuadrante*vec
+    
+    clima$cuadrante.col[clima$cuadrante.data==1] <- "Alto-Alto"
+    clima$cuadrante.col[clima$cuadrante.data==2] <- "Bajo-Bajo"
+    clima$cuadrante.col[clima$cuadrante.data==3] <- "Bajo-Alto"
+    clima$cuadrante.col[clima$cuadrante.data==4] <- "Alto-Bajo"
+    clima$cuadrante.col[clima$cuadrante.data==0] <- "No-signif"
+    
+    clima$fill <- factor(clima$cuadrante.data+1)
+    clima$var_mean <- mean
+    clima$var_lag_mean <- lag_mean
+    clima$statistic <- statistic[1]
+    
+    clima.sel <- subset(clima, select = c(CVE_ENT, ADMIN_NAME, var, var_lag, cuadrante, cuadrante.data,
+                                        cuadrante.col, fill, var_mean, var_lag_mean, statistic))
+  })
+
+  x <- reactive({
+  if (input$radiodos == 1) {
+    x <- "\nPrecipitación total promedio por Entidad Federativa"
+  } else if (input$radiodos == 2) {
+    x <- "\nTemperatura mínima promedio por Entidad Federativa"
+  } else if (input$radiodos == 3) {
+    x <- "\nTemperatura promedio por Entidad Federativa"
+  } else {
+    x <- "\nTemperatura máxima promedio por Entidad Federativa"
+  }
+  })
+
+  y <- reactive({
+  if (input$radiodos == 1) {
+    y <- "\nRetraso espacial de la precipitación total promedio por Entidad Federativa"  
+  } else if (input$radiodos == 2) {
+    y <- "\nRetraso espacial de la temperatura mínima promedio por Entidad Federativa"  
+  } else if (input$radiodos == 3) {
+    y <- "\nRetraso espacial de la temperatura promedio por Entidad Federativa"
+  } else {
+    y <- "\nRetraso espacial de la temperatura máxima promedio por Entidad Federativa" 
+  }
+})
+
+  output$moranPlot <- renderPlot({
+    cColors <- c(rgb(0.74, 0.74, 0.74, alpha = 0.2), rgb(1, 0, 0, alpha = 0.75),
+                 rgb(0, 0, 1, alpha = 0.75), rgb(0.58, 0.58, 1, alpha = 0.75), rgb(1, 0.58, 0.58, alpha = 0.75))
+    ggplot(selected()@data, aes(x=var, y=var_lag)) +
+      geom_point(aes(fill = selected()$fill), colour="black", size = 3, shape = 21)+
+      scale_fill_manual(name="",
+                        values = c("1" = cColors[1], "2" = cColors[2], "3" = cColors[3], "4" = cColors[4], "5" =cColors[5]),
+                        labels=c("No-signif",
+                                 paste0("Alto-Alto (", sum(selected()$cuadrante.data==1), ")"),  
+                                 paste0("Bajo-Bajo (", sum(selected()$cuadrante.data==2), ")"),
+                                 paste0("Bajo-Alto (", sum(selected()$cuadrante.data==3), ")"),
+                                 paste0("Alto-Bajo (", sum(selected()$cuadrante.data==4), ")"))) +
+      geom_vline(xintercept = unique(selected()$var_mean), colour = "grey", linetype = "longdash") +
+      geom_hline(yintercept = unique(selected()$var_lag_mean), colour = "grey", linetype = "longdash") +
+      stat_smooth(method="lm", se=FALSE, colour = "black", size = 0.5) +
+      xlab(x()) +
+      ylab(y()) +
+      theme_bw() +
+      ggtitle(paste0("I de Moran: ", unique(selected()$statistic),"\n")) +
+      theme(plot.title = element_text(color = "darkorchid")) 
+  })
+    
+ ````
  
  
-### [ACCESO A LOS COGIGOS FUENTES] 
-[ACCESO A LOS COGIGOS FUENTES]: https://github.com/GAMM1031/PFinal_Equipo4/blob/master/codigos%20/server
+ #### POS
+ 
+ 
+ ````R
+ 
+   output$LISAmap <- renderLeaflet({
+    cColors <- c(rgb(0.74, 0.74, 0.74), rgb(1, 0, 0),
+                 rgb(0, 0, 1), rgb(0.58, 0.58, 1), rgb(1, 0.58, 0.58))
+    factpal <- colorFactor(cColors, 
+                           domain = c("0", "1", "2", "3", "4"))
+    
+    popup <- paste(selected()$ADMIN_NAME,":", selected()$var, etiqu(), input$yearLISA)
+    leaflet(clima) %>%
+      addProviderTiles('CartoDB.Positron') %>%
+      addPolygons(data = selected(), fillColor = ~factpal(cuadrante.data), 
+                  fillOpacity = 0.7, color = "black", weight = 1, label = popup) %>%
+      addLegend(position = "topright", colors = cColors,
+                labels = c("No-signif", "Alto-Alto", "Bajo-Bajo", "Bajo-Alto", "Alto-Bajo"), opacity = 0.7)
+  })
+  
+  brushed <- eventReactive(input$plot_brush, {
+    brushedPoints(selected(), input$plot_brush)
+  })
+
+  output$table <- DT::renderDataTable({
+    tbl <- brushed() %>%   
+      as.data.frame() %>% 
+      select("Entidad Federativa" = ADMIN_NAME, "Variable evaluada en mm o en °C" = var, "Tipo de Cluster" = cuadrante.col)
+  },
+  rownames = FALSE, options = list(pageLength = 5, dom = 'tip', autoWidth = FALSE))
+  
+  observe({
+    req(brushed())
+    popup <- paste(brushed()$ADMIN_NAME, ":", brushed()$var, etiqu(), input$yearLISA)
+    leafletProxy('LISAmap') %>%
+      clearGroup(group = 'brushed') %>%
+      addPolygons(data = brushed(), fill = "#9cf", color = '#036', weight = 1.5,
+                  opacity = 0.5, group = 'brushed', label = popup)
+  })
+  
+})
+
+````
+ 
+### [ACCESO A LOS CODIGOS FUENTES] 
+[ACCESO A LOS CODIGOS FUENTES]: https://github.com/GAMM1031/PFinal_Equipo4/blob/master/codigos%20/server
