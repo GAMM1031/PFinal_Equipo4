@@ -509,9 +509,28 @@ Para lo cual se vuelve hacer uso de las condiciones `if` y `else if`, para poder
         return(NULL)
       }
     })
+ ````
 
-    
+#### Se crea una serie de condicionantes usando `if` y `else if`, esto para desplegar el mapa del análisis lisa de acuerdo con el tipo de vecindad seleccionadao
 
 
+ ````R
+    clima_weights <- reactive({
+      if (input$radio == 1) {
+        return(nb2listw(poly2nb(clima)))
+      } else if (input$radio == 2) {
+        return(nb2listw(poly2nb(clima, queen = FALSE)))
+      } else if (input$radio == 3) {
+        k <- knearneigh(coordinates(clima), k = input$knn_slider, longlat = TRUE)
+        return(nb2listw(knn2nb(k)))
+      } else if (input$radio == 4) {
+        d <- dnearneigh(coordinates(clima), 0, input$dist_slider, longlat = TRUE)
+        return(nb2listw(d))
+      }
+    })
+ ````
+ 
+ 
+ 
 ### [ACCESO A LOS COGIGOS FUENTES] 
 [ACCESO A LOS COGIGOS FUENTES]: https://github.com/GAMM1031/PFinal_Equipo4/blob/master/codigos%20/server
