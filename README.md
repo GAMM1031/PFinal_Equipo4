@@ -213,6 +213,305 @@ shinyServer(function(input, output) {
   
 ````
 
+## Se plotea ¿el MAPA?
+
+Donde imprime el mapa de salida de acuerdo a la seleccón que se le haga click en el panel de opciones del lado izquierdo, tanto en la variable elegida como en el año.
 
 
-### [ACCESO A LOS COGIGOS FUENTES]: https://github.com/GAMM1031/PFinal_Equipo4/blob/master/codigos%20/server
+```` R
+output$sdPlot <- renderPlot({
+    data()
+    par(mar = c(0, 0, 1.5, 0))
+    shades <- auto.shading(data(), cutter = rangeCuts, n = 7, cols = brewer.pal(7, plt()))
+    choropleth(clima, data(), shades)
+    choro.legend(-95, 32, shades, under = "<", over = ">", between = "a", box.lty = "blank", x.intersp = 0.5, y.intersp = 0.75, cex = 1)
+    title(main = paste(etiq(), year(), et()), cex.main = 1.25)  
+  })
+  
+  plot.data <- data.frame(clima)
+  
+  output$estadosSelect <- renderUI({
+    selectInput("estado",
+                "Estado:",
+                choices = as.list(unique(clima$ADMIN_NAME)),
+                selected = "Aguascalientes")
+  })
+  
+  estado <- reactive({
+    if (is.null(input$estado)) {
+      return(NULL)
+    }
+    input$estado
+  })
+  
+  output$ggplot <- renderPlot({
+    if (is.null(input$estado)) {
+      return()
+    }
+    
+    plot.data.gg <- subset(clima, ADMIN_NAME==estado())
+    
+    if (input$rad == 1) {
+      data.gg <- data.frame(plot.data.gg$ADMIN_NAME,plot.data.gg$PR04,  
+                            plot.data.gg$PR05, plot.data.gg$PR06, plot.data.gg$PR07, 
+                            plot.data.gg$PR08, plot.data.gg$PR09, plot.data.gg$PR10, 
+                            plot.data.gg$PR11, plot.data.gg$PR12, plot.data.gg$PR13, 
+                            plot.data.gg$PR14, plot.data.gg$PR15, plot.data.gg$PR16)
+      colnames(data.gg) = c('ADMIN_NAME', '2004', '2005','2006', '2007', '2008', '2009', 
+                            '2010', '2011', '2012', '2013', '2014', '2015', '2016')
+      plot.total <- melt(data.gg, id = c("ADMIN_NAME"))
+    } else if (input$rad == 2) {
+      data.gg <- data.frame(plot.data.gg$ADMIN_NAME,plot.data.gg$TMIN04,  
+                            plot.data.gg$TMIN05, plot.data.gg$TMIN06, plot.data.gg$TMIN07, 
+                            plot.data.gg$TMIN08, plot.data.gg$TMIN09, plot.data.gg$TMIN10, 
+                            plot.data.gg$TMIN11, plot.data.gg$TMIN12, plot.data.gg$TMIN13, 
+                            plot.data.gg$TMIN14, plot.data.gg$TMIN15, plot.data.gg$TMIN16)
+      colnames(data.gg) = c('ADMIN_NAME', '2004', '2005','2006', '2007', '2008', '2009', 
+                            '2010', '2011', '2012', '2013', '2014', '2015', '2016')
+      plot.total <- melt(data.gg, id = c("ADMIN_NAME"))
+    } else if (input$rad == 3) {
+      data.gg <- data.frame(plot.data.gg$ADMIN_NAME,plot.data.gg$TMED04,  
+                            plot.data.gg$TMED05, plot.data.gg$TMED06, plot.data.gg$TMED07, 
+                            plot.data.gg$TMED08, plot.data.gg$TMED09, plot.data.gg$TMED10, 
+                            plot.data.gg$TMED11, plot.data.gg$TMED12, plot.data.gg$TMED13, 
+                            plot.data.gg$TMED14, plot.data.gg$TMED15, plot.data.gg$TMED16)
+      colnames(data.gg) = c('ADMIN_NAME', '2004', '2005','2006', '2007', '2008', '2009', 
+                            '2010', '2011', '2012', '2013', '2014', '2015', '2016')
+      plot.total <- melt(data.gg, id = c("ADMIN_NAME"))
+    } else {
+      data.gg <- data.frame(plot.data.gg$ADMIN_NAME,plot.data.gg$TMAX04,  
+                            plot.data.gg$TMAX05, plot.data.gg$TMAX06, plot.data.gg$TMAX07, 
+                            plot.data.gg$TMAX08, plot.data.gg$TMAX09, plot.data.gg$TMAX10, 
+                            plot.data.gg$TMAX11, plot.data.gg$TMAX12, plot.data.gg$TMAX13, 
+                            plot.data.gg$TMAX14, plot.data.gg$TMAX15, plot.data.gg$TMAX16)
+      colnames(data.gg) = c('ADMIN_NAME', '2004', '2005','2006', '2007', '2008', '2009', 
+                            '2010', '2011', '2012', '2013', '2014', '2015', '2016')
+      plot.total <- melt(data.gg, id = c("ADMIN_NAME"))
+    }
+    
+    a <- reactive({
+      if (input$rad == 1) {
+        a <- paste("Precipitacion total anual del estado de", plot.total$ADMIN_NAME)
+      } else if (input$rad == 2) {
+        a <- paste("Temperatura mÃ­nima promedio anual del estado de", plot.total$ADMIN_NAME)
+      } else if (input$rad == 3) {
+        a <- paste("Temperatura promedio anual del estado de", plot.total$ADMIN_NAME)
+      } else {
+        a <- paste("Temperatura mÃ¡xima promedio anual del estado de", plot.total$ADMIN_NAME)
+      }
+    })
+    
+    b <- reactive({
+      if (input$rad == 1) {
+        b <- "LÃ¡mina de lluvia en mm"
+      } else {
+        b <- "Temperatura en Â°C"
+      }
+    })
+    
+    dosmenos <- round(min(plot.total$value), digits = 2)
+    unomenos <- round((min(plot.total$value) + mean(plot.total$value))/2, digits = 2)
+    media <- round(mean(plot.total$value), digits = 2)
+    unomas <- round((mean(plot.total$value) + max(plot.total$value))/2, digits = 2)
+    dosmas <- round(max(plot.total$value), digits = 2)
+    
+    sdClass <- function(var){
+      
+      Clase = vector(mode = "character", length = length(var))
+      
+      Clase[var <= dosmenos] <- '1'
+      Clase[var > dosmenos & var <= unomenos] <- '2'
+      Clase[var > unomenos & var <= media] <- '3'
+      Clase[var > media & var <= unomas] <- '4'
+      Clase[var > unomas & var <= dosmas] <- '5'
+      
+      Clase <- factor(Clase, levels = c('1', '2', '3','4','5'))
+      return(Clase)
+    }
+ ````
+
+
+#### Se imprime la gráfica que corresponde a los datos anuales de precipitación de acuerdo al estado seleccionado
+
+
+ ````R
+   plot.total$'Clase' <- sdClass(plot.total$value)
+    
+    ggplot(plot.total, aes(x = variable, y = value, fill = Clase)) +
+      ggtitle(a()) +
+      xlab("Anios con datos") +
+      ylab(b()) +
+      theme(plot.title = element_text(hjust = 0.5, size = 14, face = "bold", family = "Verdana")) +
+      theme(axis.title.x = element_text(hjust = 0.5, family = "Verdana", face="bold", size=12)) +
+      theme(axis.title.y = element_text(hjust = 0.5, family = "Verdana", face="bold", size=12)) +
+      theme(axis.text.x = element_text(size = 12, family = "Verdana")) +
+      theme(axis.text.y = element_text(size = 12, family = "Verdana")) +
+      scale_x_discrete(limit = c('2004', '2005', '2006', '2007', '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015', '2016'),
+                       labels = c('2004', '2005', '2006', '2007', '2008', '2009', '2010', '2011', '2012', '2013', '2014', '2015', '2016')) +
+      scale_fill_brewer(palette = plt(), name = "Rangos",
+                        breaks = c('1', '2', '3', '4','5'),
+                        labels = c(dosmenos, unomenos, media, unomas, dosmas), drop = TRUE, guide = "legend") +
+      geom_bar(stat="identity") +
+      scale_y_continuous(breaks= pretty_breaks()) +
+      guides(fill = guide_legend(ncol=1)) +  
+      theme(legend.title = element_text(size = 12, family = "Verdana", face="italic"),
+            legend.position = "left", legend.key.size = unit(8, "mm"), strip.text = element_text(size=8, face="bold"),
+            legend.text = element_text(size = 10, family = "Verdana")) +
+      geom_text(aes(label = value), position = position_stack(0.1), size = 5, color = "black", face="bold")
+  })
+ ````
+
+
+## Se crea la segunda pestaña 
+En este apartado, se crean la representación gráfica por medio de un mapa y gráfica del análisis de los indicadores locales de asociación espacial (LISA, por su acrónimo en inglés).
+
+Para lo cual se vuelve hacer uso de las condiciones `if` y `else if`, para poder desplegar la información de las cuatro variables climáticas, que son precipitación, temperatura media, temperatura máxima y temperatura minima:
+
+
+
+ ````R
+ selected <- reactive({
+    if (input$radiodos == 1) {
+      if (input$yearLISA == 2004) {
+        var <- clima$PR04
+      } else if (input$yearLISA == 2005) {
+        var <- clima$PR05  
+      } else if (input$yearLISA == 2006) {
+        var <- clima$PR06
+      } else if (input$yearLISA == 2007) {
+        var <- clima$PR07
+      } else if (input$yearLISA == 2008) {
+        var <- clima$PR08
+      } else if (input$yearLISA == 2009) {
+        var <- clima$PR09
+      } else if (input$yearLISA == 2010) {
+        var <- clima$PR10
+      } else if (input$yearLISA == 2011) {
+        var <- clima$PR11
+      } else if (input$yearLISA == 2012) {
+        var <- clima$PR12
+      } else if (input$yearLISA == 2013) {
+        var <- clima$PR13
+      } else if (input$yearLISA == 2014) {
+        var <- clima$PR14
+      } else if (input$yearLISA == 2015) {
+        var <- clima$PR15
+      } else {
+        var <- clima$PR16    
+      }
+    }
+    if (input$radiodos == 2) {
+      if (input$yearLISA == 2004) {
+        var <- clima$TMIN04
+      } else if (input$yearLISA == 2005) {
+        var <- clima$TMIN05 
+      } else if (input$yearLISA == 2006) {
+        var <- clima$TMIN06
+      } else if (input$yearLISA == 2007) {
+        var <- clima$TMIN07
+      } else if (input$yearLISA == 2008) {
+        var <- clima$TMIN08
+      } else if (input$yearLISA == 2009) {
+        var <- clima$TMIN09
+      } else if (input$yearLISA == 2010) {
+        var <- clima$TMIN10
+      } else if (input$yearLISA == 2011) {
+        var <- clima$TMIN11
+      } else if (input$yearLISA == 2012) {
+        var <- clima$TMIN12
+      } else if (input$yearLISA == 2013) {
+        var <- clima$TMIN13
+      } else if (input$yearLISA == 2014) {
+        var <- clima$TMIN14
+      } else if (input$yearLISA == 2015) {
+        var <- clima$TMIN15
+      } else {
+        var <- clima$TMIN16    
+      }
+    }
+    if (input$radiodos == 3) {
+      if (input$yearLISA == 2004) {
+        var <- clima$TMED04
+      } else if (input$yearLISA == 2005) {
+        var <- clima$TMED05 
+      } else if (input$yearLISA == 2006) {
+        var <- clima$TMED06
+      } else if (input$yearLISA == 2007) {
+        var <- clima$TMED07
+      } else if (input$yearLISA == 2008) {
+        var <- clima$TMED08
+      } else if (input$yearLISA == 2009) {
+        var <- clima$TMED09
+      } else if (input$yearLISA == 2010) {
+        var <- clima$TMED10
+      } else if (input$yearLISA == 2011) {
+        var <- clima$TMED11
+      } else if (input$yearLISA == 2012) {
+        var <- clima$TMED12
+      } else if (input$yearLISA == 2013) {
+        var <- clima$TMED13
+      } else if (input$yearLISA == 2014) {
+        var <- clima$TMED14
+      } else if (input$yearLISA == 2015) {
+        var <- clima$TMED15
+      } else {
+        var <- clima$TMED16    
+      }
+    }
+    else {
+      if (input$yearLISA == 2004) {
+        var <- clima$TMAX04
+      } else if (input$yearLISA == 2005) {
+        var <- clima$TMAX05 
+      } else if (input$yearLISA == 2006) {
+        var <- clima$TMAX06
+      } else if (input$yearLISA == 2007) {
+        var <- clima$TMAX07
+      } else if (input$yearLISA == 2008) {
+        var <- clima$TMAX08
+      } else if (input$yearLISA == 2009) {
+        var <- clima$TMAX09
+      } else if (input$yearLISA == 2010) {
+        var <- clima$TMAX10
+      } else if (input$yearLISA == 2011) {
+        var <- clima$TMAX11
+      } else if (input$yearLISA == 2012) {
+        var <- clima$TMAX12
+      } else if (input$yearLISA == 2013) {
+        var <- clima$TMAX13
+      } else if (input$yearLISA == 2014) {
+        var <- clima$TMAX14
+      } else if (input$yearLISA == 2015) {
+        var <- clima$TMAX15
+      } else {
+        var <- clima$TMAX16    
+      }
+    }   
+ ````
+ 
+ #### También se crea la opción de tipos de vencindades que se utlizará para el análisis LISA, donde se considera distancia, vecinos más cercanos, queen (reyna) y torre, donde estos últimos dos fueron establecidos al inicio del cógido: 
+ 
+ ````R
+        # Distance-based spatial weights
+    knn <- reactive({
+      if (input$radio == 3) {
+        k <- knearneigh(coordinates(clima), k = input$knn_slider, longlat = TRUE)
+        return(k$nn)
+      } else {
+        return(NULL)
+      }
+    })
+    
+    dist <- reactive({
+      if (input$radio == 4) {
+        return(dnearneigh(coordinates(clima), 0, input$dist_slider, longlat = TRUE))
+      } else {
+        return(NULL)
+      }
+    })
+
+    
+
+
+### [ACCESO A LOS COGIGOS FUENTES] 
+[ACCESO A LOS COGIGOS FUENTES]: https://github.com/GAMM1031/PFinal_Equipo4/blob/master/codigos%20/server
