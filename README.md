@@ -621,7 +621,7 @@ Para lo cual se vuelve hacer uso de las condiciones `if` y `else if`, para poder
  ````
  
  
- #### POS
+ #### Después de haber seleccionado la opción de vecindad y el tipo de variable, se hace la impresión del mapa de autocorrelación espacial usando un mapa base del servidor leaflet
  
  
  ````R
