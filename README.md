@@ -7,15 +7,17 @@ Este proyecto está enfocado en realizar un estudio del comportamiento de las va
 -	Comportamiento Anual de las variables climáticas a partir de la evaluación de indicadores de Asociación Espacial (LISA), para diferentes tipos matrices de vecindades y distancias.
 
 
-Fuente del Datos:
-
-Los datos fueron extraídos del sitio oficial del Servicio Meteorológico Nacional (SMN), a partir del de sus reportes de resúmenes Mensuales de Temperaturas y Lluvia publicado y accedido a través del enlace: http://smn.cna.gob.mx/es/climatologia/temperaturas-y-lluvias/resumenes-mensuales-de-temperaturas-y-lluvias
 
 ## Materiales Utilizados:
 
 Para la confección de estos mapas, fue utilizada R-Studio Versión 1.0.153 – © 2009-2017 RStudio, Inc.
 
+Los datos fueron extraídos del sitio oficial del Servicio Meteorológico Nacional (SMN), a partir del de sus reportes de resúmenes Mensuales de Temperaturas y Lluvia publicado y accedido a través del enlace: http://smn.cna.gob.mx/es/climatologia/temperaturas-y-lluvias/resumenes-mensuales-de-temperaturas-y-lluvias
+
+
+
 # Resultados obtenidos:
+
 
 #### Mapas de Comportamiento de las variables climáticas
 
@@ -70,6 +72,8 @@ En el ejemplo de la figura se muestran los resultados para una vecindad de reina
 ![img](/img/img8.png)
 
 
+
+
 ## METODOLOGÍA
 Antes de comenzar, necesitamos cargar (o instalar primero, en caso de que no estén ya instaladas) las librerías que vamos a usar:
 
@@ -102,6 +106,7 @@ clima.nbr <- poly2nb(clima, queen = F)
 clima.nbr.w <- nb2listw(clima.nbr)
 ###### #Las coordenadas de los centroides de los estados
 coords <- coordinates(clima)
+
 
 
 ## Se crea la primer pestaña 
@@ -213,7 +218,11 @@ shinyServer(function(input, output) {
   
 ````
 
-## Se plotea ¿el MAPA?
+
+
+
+
+## Impresión del mapa de la variable seleccionada 
 
 Donde imprime el mapa de salida de acuerdo a la seleccón que se le haga click en el panel de opciones del lado izquierdo, tanto en la variable elegida como en el año.
 
@@ -331,7 +340,9 @@ output$sdPlot <- renderPlot({
  ````
 
 
+
 #### Se imprime la gráfica que corresponde a los datos anuales de precipitación de acuerdo al estado seleccionado
+
 
 
  ````R
@@ -489,6 +500,8 @@ Para lo cual se vuelve hacer uso de las condiciones `if` y `else if`, para poder
     }   
  ````
  
+ 
+ 
  #### También se crea la opción de tipos de vencindades que se utlizará para el análisis LISA, donde se considera distancia, vecinos más cercanos, queen (reyna) y torre, donde estos últimos dos fueron establecidos al inicio del cógido: 
  
  ````R
@@ -510,6 +523,8 @@ Para lo cual se vuelve hacer uso de las condiciones `if` y `else if`, para poder
       }
     })
  ````
+
+
 
 #### Se crea una serie de condicionantes usando `if` y `else if`, esto para desplegar el mapa del análisis LISA de acuerdo con el tipo de vecindad seleccionadao
 
@@ -621,7 +636,8 @@ Para lo cual se vuelve hacer uso de las condiciones `if` y `else if`, para poder
  ````
  
  
- #### Después de haber seleccionado la opción de vecindad y el tipo de variable, se hace la impresión del mapa de autocorrelación espacial usando un mapa base del servidor leaflet
+ 
+#### Después de haber seleccionado la opción de vecindad y el tipo de variable, se hace la impresión del mapa de autocorrelación espacial usando un mapa base del servidor leaflet
  
  
  ````R
@@ -664,6 +680,7 @@ Para lo cual se vuelve hacer uso de las condiciones `if` y `else if`, para poder
 })
 
 ````
+ 
  
 ### ACCESO A LOS CODIGOS FUENTES 
 [server]
