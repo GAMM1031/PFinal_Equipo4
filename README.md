@@ -1,4 +1,8 @@
-# Proyecto Final    Equipo4     
+# Proyecto Final    Equipo4   
+
+# R Studio
+
+
 ## Objetivos :
 Este proyecto está enfocado en realizar un estudio del comportamiento de las variables climáticas de Precipitación y Temperatura a partir de una serie histórica que comprende el periodo 2004-2016, las variables son estudiadas a partir de la obtención de:
 
@@ -691,3 +695,84 @@ Para lo cual se vuelve hacer uso de las condiciones `if` y `else if`, para poder
 [server]: https://github.com/GAMM1031/PFinal_Equipo4/blob/master/codigos/server.R
 
 [ui]: https://github.com/GAMM1031/PFinal_Equipo4/blob/master/codigos/ui.R
+
+
+
+
+
+
+# D3
+
+D3 ( Data-Driven Documents o D3.js ) es una biblioteca de JavaScript para visualizar datos utilizando estándares web. Ayuda a llevar los datos usando SVG, CANVAS y HTML. También combina poderosas técnicas de visualización e interacción con un enfoque basado en datos para la manipulación DOM, ofreciéndole las capacidades completas de los navegadores modernos y la libertad de diseñar la interfaz visual adecuada para sus datos.
+
+
+
+
+
+```html
+
+<!DOCTYPE html>
+<head>
+  <meta charset="UTF-8">
+  <title>Final D3 - DGC, GMM, IJVC</title>
+<style>
+/*Los colores para las clases de población, rojos*/
+  .q0 { fill:#fcc383; }
+  .q1 { fill:#fc9f67; }
+  .q2 { fill:#f4794e; }
+  .q3 { fill:#e65338; }
+  .q4 { fill:#ce2a1d; }
+
+  .p0 { fill:#B6EDF0; }
+  .p1 { fill:#74B4E8; }
+  .p2 { fill:#1F83E0; }
+  .p3 { fill:#1D44B8; }
+  .p4 { fill:#090991; }
+
+
+  #climatica{
+    position: absolute;
+    top: 60px;
+    left: 860px;
+  }
+
+  #anho{
+    position: absolute;
+    top: 60px;
+    left: 1160px;
+  }
+
+  .background {
+    fill: none;
+    pointer-events: all;
+  }
+
+  #estados .active {
+    stroke: black;
+  }
+
+  #bars {
+    position: absolute;
+    margin-top: 150px;
+    margin-left: 50px;
+  }
+
+  .bar text {
+    fill: black;
+    font: 10px verdana;
+    font-weight: bold;
+    text-anchor: right;
+  }
+
+  #titulo {
+    position: absolute;
+    top: 110px;
+    left: 860px;
+    font: 17px verdana;
+    font-weight: bold;
+  }
+
+
+</style>
+</head>
+```
