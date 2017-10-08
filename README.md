@@ -701,11 +701,17 @@ Para lo cual se vuelve hacer uso de las condiciones `if` y `else if`, para poder
 
 
 
+
+
+
+
 # D3
 
 D3 ( Data-Driven Documents o D3.js ) es una biblioteca de JavaScript para visualizar datos utilizando estándares web. Ayuda a llevar los datos usando SVG, CANVAS y HTML. También combina poderosas técnicas de visualización e interacción con un enfoque basado en datos para la manipulación DOM, ofreciéndole las capacidades completas de los navegadores modernos y la libertad de diseñar la interfaz visual adecuada para sus datos.
 
 
+
+Para comenzar la representación en D3, se esta utilizando el lenguaje HTML, para lo cual se definió una conjunto de paletas de colores que serviran para representar las variables de precipitación y temperatura (media, mínima y máxima).
 
 
 
@@ -716,7 +722,7 @@ D3 ( Data-Driven Documents o D3.js ) es una biblioteca de JavaScript para visual
   <meta charset="UTF-8">
   <title>Final D3 - DGC, GMM, IJVC</title>
 <style>
-/*Los colores para las clases de población, rojos*/
+/*Los colores para las variables a representar, rojos*/
   .q0 { fill:#fcc383; }
   .q1 { fill:#fc9f67; }
   .q2 { fill:#f4794e; }
@@ -775,4 +781,130 @@ D3 ( Data-Driven Documents o D3.js ) es una biblioteca de JavaScript para visual
 
 </style>
 </head>
+
 ```
+
+
+
+Para hacer un mapa en D3, se necesita dos librerías de JavaScrip, que son: D3 y topojson. La primera es la base de D3 y la segunda es una extensión para manejar datos de tipo topoJSON. 
+
+-Se define una proyección, coordenadas del centro del mapa y el nivel de zoom:
+-Lo primero que vamos a hacer es leer los datos y dibujar un mapa pintando todos los polígonos de un mismo color:
+-Se desglosa los _features_ del topoJSON ` features = topojson.feature(datos, datos.objects.clima); `
+
+```` html
+
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script src="https://unpkg.com/topojson@3"></script>
+  <script>
+
+    var features, nest, bar;
+
+    var width = 800,
+        height = 600,
+        active = d3.select(null);
+
+    var projection = d3.geoMercator()
+                       .scale(1400)
+                       .center([-102.584065, 23.62755])
+                       .translate([width/2, height/2]);
+
+    var select = d3.selectAll(".select");
+
+    var svg = d3.select("body").append("svg")
+                .attr("width", width)
+                .attr("height", height);
+
+    svg.append("rect")
+       .attr("class", "background")
+       .attr("width", width)
+       .attr("height", height)
+       .on("click", reset);
+
+    var g = svg.append("g")
+               .attr("id", "estados");
+
+    var barSvg = d3.select("body").append("svg")
+               .attr("id", "bars")
+               .attr("height", 200)
+               .attr("width", 400);
+
+    var path = d3.geoPath().projection(projection);
+
+    d3.json('clima.json', function(error, datos) {
+
+        features = topojson.feature(datos, datos.objects.clima);
+
+        var propiedades = features.features.map(function(ADMIN_NAME) {return ADMIN_NAME.properties;});
+        nest = d3.nest()
+          .key(function(d) { return d.ADMIN_NAME; })
+          .rollup(function(values) {
+            return {
+              PR04: +d3.values(values)[0]['PR04'],
+              PR05: +d3.values(values)[0]['PR05'],
+              PR06: +d3.values(values)[0]['PR06'],
+              PR07: +d3.values(values)[0]['PR07'],
+              PR08: +d3.values(values)[0]['PR08'],
+              PR09: +d3.values(values)[0]['PR09'],
+              PR10: +d3.values(values)[0]['PR10'],
+              PR11: +d3.values(values)[0]['PR11'],
+              PR12: +d3.values(values)[0]['PR12'],
+              PR13: +d3.values(values)[0]['PR13'],
+              PR14: +d3.values(values)[0]['PR14'],
+              PR15: +d3.values(values)[0]['PR15'],
+              PR16: +d3.values(values)[0]['PR16'],
+              TMIN04: +d3.values(values)[0]['TMIN04'],
+              TMIN05: +d3.values(values)[0]['TMIN05'],
+              TMIN06: +d3.values(values)[0]['TMIN06'],
+              TMIN07: +d3.values(values)[0]['TMIN07'],
+              TMIN08: +d3.values(values)[0]['TMIN08'],
+              TMIN09: +d3.values(values)[0]['TMIN09'],
+              TMIN10: +d3.values(values)[0]['TMIN10'],
+              TMIN11: +d3.values(values)[0]['TMIN11'],
+              TMIN12: +d3.values(values)[0]['TMIN12'],
+              TMIN13: +d3.values(values)[0]['TMIN13'],
+              TMIN14: +d3.values(values)[0]['TMIN14'],
+              TMIN15: +d3.values(values)[0]['TMIN15'],
+              TMIN16: +d3.values(values)[0]['TMIN16'],
+              TMED04: +d3.values(values)[0]['TMED04'],
+              TMED05: +d3.values(values)[0]['TMED05'],
+              TMED06: +d3.values(values)[0]['TMED06'],
+              TMED07: +d3.values(values)[0]['TMED07'],
+              TMED08: +d3.values(values)[0]['TMED08'],
+              TMED09: +d3.values(values)[0]['TMED09'],
+              TMED10: +d3.values(values)[0]['TMED10'],
+              TMED11: +d3.values(values)[0]['TMED11'],
+              TMED12: +d3.values(values)[0]['TMED12'],
+              TMED13: +d3.values(values)[0]['TMED13'],
+              TMED14: +d3.values(values)[0]['TMED14'],
+              TMED15: +d3.values(values)[0]['TMED15'],
+              TMED16: +d3.values(values)[0]['TMED16'],
+              TMAX04: +d3.values(values)[0]['TMAX04'],
+              TMAX05: +d3.values(values)[0]['TMAX05'],
+              TMAX06: +d3.values(values)[0]['TMAX06'],
+              TMAX07: +d3.values(values)[0]['TMAX07'],
+              TMAX08: +d3.values(values)[0]['TMAX08'],
+              TMAX09: +d3.values(values)[0]['TMAX09'],
+              TMAX10: +d3.values(values)[0]['TMAX10'],
+              TMAX11: +d3.values(values)[0]['TMAX11'],
+              TMAX12: +d3.values(values)[0]['TMAX12'],
+              TMAX13: +d3.values(values)[0]['TMAX13'],
+              TMAX14: +d3.values(values)[0]['TMAX14'],
+              TMAX15: +d3.values(values)[0]['TMAX15'],
+              TMAX16: +d3.values(values)[0]['TMAX16']
+            };
+          })
+          .entries(propiedades);
+
+        select.on("change", function(d) {
+           var interes = "";
+           d3.selectAll(".select").each(function(d,i){ return interes+=this.value;});
+           hazMapa(interes);
+        });
+        var interes = "";
+           d3.selectAll(".select").each(function(d,i){ return interes+=this.value;});
+           hazMapa(interes);
+    });
+
+````
+
