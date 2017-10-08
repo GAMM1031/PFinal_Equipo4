@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<head>
+  <meta charset="UTF-8">
+  <title>Final D3 - DGC, GMM, IJVC</title>
+<style>
+/*Los colores para las clases de población, rojos*/
+  .q0 { fill:#fcc383; }
+  .q1 { fill:#fc9f67; }
+  .q2 { fill:#f4794e; }
+  .q3 { fill:#e65338; }
+  .q4 { fill:#ce2a1d; }
+
+  .p0 { fill:#B6EDF0; }
+  .p1 { fill:#74B4E8; }
+  .p2 { fill:#1F83E0; }
+  .p3 { fill:#1D44B8; }
+  .p4 { fill:#090991; }
+
+
+  #climatica{
+    position: absolute;
+    top: 60px;
+    left: 860px;
+  }
+
+  #anho{
+    position: absolute;
+    top: 60px;
+    left: 1160px;
+  }
+
+  .background {
+    fill: none;
+    pointer-events: all;
+  }
+
+  #estados .active {
+    stroke: black;
+  }
+
+  #bars {
+    position: absolute;
+    margin-top: 150px;
+    margin-left: 50px;
+  }
+
+  .bar text {
+    fill: black;
+    font: 10px verdana;
+    font-weight: bold;
+    text-anchor: right;
+  }
+
+  #titulo {
+    position: absolute;
+    top: 110px;
+    left: 860px;
+    font: 17px verdana;
+    font-weight: bold;
+  }
+
+
+</style>
+</head>
+<body>
+  <select id="climatica" class="select">
+    <option value="PR" selected>Precipitación media anual (PR)</option>
+    <option value="TMIN">Temperatura mínima promedio anual (TMIN)</option>
+    <option value="TMED">Temperatura promedio anual (TMED)</option>
+    <option value="TMAX">Temperatura máxima promedio anual (TMAX)</option>
+  </select>
+  <select id="anho", class="select">
+    <option value="04" selected>2004</option>
+    <option value="05">2005</option>
+    <option value="06">2006</option>
+    <option value="07">2007</option>
+    <option value="08">2008</option>
+    <option value="09">2009</option>
+    <option value="10">2010</option>
+    <option value="11">2011</option>
+    <option value="12">2012</option>
+    <option value="13">2013</option>
+    <option value="14">2014</option>
+    <option value="15">2015</option>
+    <option value="16">2016</option>
+  </select>
+  <div id="titulo"></div>
+</body>
+  <script src="https://d3js.org/d3.v4.min.js"></script>
+  <script src="https://unpkg.com/topojson@3"></script>
+  <script>
+
+    var features, nest, bar;
+
+    var width = 800,
+        height = 600,
+        active = d3.select(null);
+
+    var projection = d3.geoMercator()
+                       .scale(1400)
+                       .center([-102.584065, 23.62755])
+                       .translate([width/2, height/2]);
+
+    var select = d3.selectAll(".select");
+
+    var svg = d3.select("body").append("svg")
+                .attr("width", width)
+                .attr("height", height);
+
+    svg.append("rect")
+       .attr("class", "background")
+       .attr("width", width)
+       .attr("height", height)
+       .on("click", reset);
+
+    var g = svg.append("g")
+               .attr("id", "estados");
+
+    var barSvg = d3.select("body").append("svg")
+               .attr("id", "bars")
+               .attr("height", 200)
+               .attr("width", 400);
+
+    var path = d3.geoPath().projection(projection);
+
+    d3.json('clima.json', function(error, datos) {
+
+        features = topojson.feature(datos, datos.objects.clima);
+
+        var propiedades = features.features.map(function(ADMIN_NAME) {return ADMIN_NAME.properties;});
+        nest = d3.nest()
+          .key(function(d) { return d.ADMIN_NAME; })
+          .rollup(function(values) {
+            return {
+              PR04: +d3.values(values)[0]['PR04'],
+              PR05: +d3.values(values)[0]['PR05'],
+              PR06: +d3.values(values)[0]['PR06'],
+              PR07: +d3.values(values)[0]['PR07'],
+              PR08: +d3.values(values)[0]['PR08'],
+              PR09: +d3.values(values)[0]['PR09'],
+              PR10: +d3.values(values)[0]['PR10'],
+              PR11: +d3.values(values)[0]['PR11'],
+              PR12: +d3.values(values)[0]['PR12'],
+              PR13: +d3.values(values)[0]['PR13'],
+              PR14: +d3.values(values)[0]['PR14'],
+              PR15: +d3.values(values)[0]['PR15'],
+              PR16: +d3.values(values)[0]['PR16'],
+              TMIN04: +d3.values(values)[0]['TMIN04'],
+              TMIN05: +d3.values(values)[0]['TMIN05'],
+              TMIN06: +d3.values(values)[0]['TMIN06'],
+              TMIN07: +d3.values(values)[0]['TMIN07'],
+              TMIN08: +d3.values(values)[0]['TMIN08'],
+              TMIN09: +d3.values(values)[0]['TMIN09'],
+              TMIN10: +d3.values(values)[0]['TMIN10'],
+              TMIN11: +d3.values(values)[0]['TMIN11'],
+              TMIN12: +d3.values(values)[0]['TMIN12'],
+              TMIN13: +d3.values(values)[0]['TMIN13'],
+              TMIN14: +d3.values(values)[0]['TMIN14'],
+              TMIN15: +d3.values(values)[0]['TMIN15'],
+              TMIN16: +d3.values(values)[0]['TMIN16'],
+              TMED04: +d3.values(values)[0]['TMED04'],
+              TMED05: +d3.values(values)[0]['TMED05'],
+              TMED06: +d3.values(values)[0]['TMED06'],
+              TMED07: +d3.values(values)[0]['TMED07'],
+              TMED08: +d3.values(values)[0]['TMED08'],
+              TMED09: +d3.values(values)[0]['TMED09'],
+              TMED10: +d3.values(values)[0]['TMED10'],
+              TMED11: +d3.values(values)[0]['TMED11'],
+              TMED12: +d3.values(values)[0]['TMED12'],
+              TMED13: +d3.values(values)[0]['TMED13'],
+              TMED14: +d3.values(values)[0]['TMED14'],
+              TMED15: +d3.values(values)[0]['TMED15'],
+              TMED16: +d3.values(values)[0]['TMED16'],
+              TMAX04: +d3.values(values)[0]['TMAX04'],
+              TMAX05: +d3.values(values)[0]['TMAX05'],
+              TMAX06: +d3.values(values)[0]['TMAX06'],
+              TMAX07: +d3.values(values)[0]['TMAX07'],
+              TMAX08: +d3.values(values)[0]['TMAX08'],
+              TMAX09: +d3.values(values)[0]['TMAX09'],
+              TMAX10: +d3.values(values)[0]['TMAX10'],
+              TMAX11: +d3.values(values)[0]['TMAX11'],
+              TMAX12: +d3.values(values)[0]['TMAX12'],
+              TMAX13: +d3.values(values)[0]['TMAX13'],
+              TMAX14: +d3.values(values)[0]['TMAX14'],
+              TMAX15: +d3.values(values)[0]['TMAX15'],
+              TMAX16: +d3.values(values)[0]['TMAX16']
+            };
+          })
+          .entries(propiedades);
+
+        select.on("change", function(d) {
+           var interes = "";
+           d3.selectAll(".select").each(function(d,i){ return interes+=this.value;});
+           hazMapa(interes);
+        });
+        var interes = "";
+           d3.selectAll(".select").each(function(d,i){ return interes+=this.value;});
+           hazMapa(interes);
+    });
+
+    function hazMapa(interes){
+
+        var max = d3.max(features.features, function(d) { return d.properties[interes]; })
+
+        var quantizepr = d3.scaleQuantize()
+                         .domain([0, max])
+                         .range(d3.range(5).map(function(i) { return "p" + i; }));
+
+        var quantize = d3.scaleQuantize()
+                       .domain([0, max])
+                       .range(d3.range(5).map(function(i) { return "q" + i; }));
+
+         var mapUpdate = g.selectAll("path")
+                          .data(features.features);
+
+         var mapEnter = mapUpdate.enter();
+
+         mapEnter.append("path")
+                 .merge(mapUpdate)
+                 .attr("d", path)
+                 .attr("class", function(d){
+                   if (d.properties[interes] > 50) {
+                     return quantizepr(d.properties[interes]) }
+                   else { return quantize(d.properties[interes]) }
+                 })
+                 .on("click", clicked);
+    }
+
+    d = [{nombre: "PR", datos: "0"}, {nombre: "TMIN", datos: "0"}, {nombre: "TMED", datos: "0"}, {nombre: "TMAX", datos: "0"}];
+    var colores = {"PR": "steelblue", "TMIN": "#fcc383", "TMED": "#f4794e", "TMAX": "#ce2a1d"};
+
+    var barWidth = 300,
+      barHeight = 35;
+    var x = d3.scaleLinear()
+            .range([0, barWidth])
+            .domain([0, 300]);
+
+    bar = barSvg.selectAll(".bar")
+              .data(d);
+
+    var barEnter = bar.enter()
+      .append("g")
+      .attr("class", "bar")
+      .attr("transform", function(d, i) { return "translate(0," + i * barHeight + ")"; })
+
+    d3.select("#titulo").html("Variables climáticas a evaluar");
+
+    barEnter.append("rect")
+        .transition()
+        .duration(500)
+        .attr("width", 0 )
+        .attr("height", barHeight - 3)
+        .attr("fill", function(d) { return colores[d.nombre]; });
+
+    barEnter.append("text")
+          .transition()
+          .duration(500)
+          .attr("x", 0)
+          .attr("y", barHeight / 2)
+          .attr("dy", ".35em")
+          .text(function(d) { return d.valor});
+
+    barEnter.append("text")
+          .transition()
+          .duration(500)
+          .attr("x", 10)
+          .attr("y", barHeight / 2)
+          .attr("dy", ".35em")
+          .text(function(d) { return d.nombre });
+
+    bar.select("rect")
+     .transition()
+     .duration(500)
+     .attr("width", 0);
+
+    bar.select("text")
+     .transition()
+     .duration(500)
+     .attr("x", 0)
+     .text(function(d) { return d.valor; });
+
+    function hazGrafica(anho, estado){
+        var climaticos = ['PR', 'TMIN', 'TMED', 'TMAX'];
+        var datos = [];
+
+        for (i = 0; i <= 3 ; i++){
+            c = {};
+            c["nombre"] = climaticos[i];
+            c["valor"] = estado[0].value[climaticos[i]+anho];
+            datos.push(c);
+        }
+
+        var barWidth = 300,
+              barHeight = 35;
+          var x = d3.scaleLinear()
+                    .range([0, barWidth])
+                    .domain([0, 300]);
+
+          bar = barSvg.selectAll(".bar")
+                      .data(datos, function(d){ return d.nombre;});
+
+          var barEnter = bar.enter()
+              .append("g")
+              .attr("class", "bar")
+              .attr("transform", function(d, i) { return "translate(0," + i * barHeight + ")"; })
+
+          d3.select("#titulo").html("Variables climáticas del Estado de " + estado[0].key.substr(0,20) + " 20" + anho);
+
+          barEnter.append("rect")
+              .transition()
+              .duration(500)
+              .attr("width", function(d) { return x(d.valor); })
+              .attr("height", barHeight - 3)
+              .attr("fill", function(d) { return colores[d.nombre]; });
+
+          barEnter.append("text")
+                  .transition()
+                  .duration(500)
+                  .attr("x", function(d) { return x(d.valor) + 35; })
+                  .attr("y", barHeight / 2)
+                  .attr("dy", ".35em")
+                  .text(function(d) { return d.valor});
+
+          barEnter.append("text")
+                  .transition()
+                  .duration(500)
+                  .attr("x", 10 )
+                  .attr("y", barHeight / 2)
+                  .attr("dy", ".35em")
+                  .text(function(d) { return d.nombre });
+
+          bar.select("rect")
+             .transition()
+             .duration(500)
+             .attr("width", function(d) {
+               if ( d.valor > 50) {
+                 return x(d.valor)/8}
+               else { return x(d.valor) * 4 }
+            });
+
+          bar.select("text")
+             .transition()
+             .duration(500)
+             .attr("x", function(d) {
+               if (d.valor > 50) {
+                 return x(d.valor)/8 + 35}
+               else { return (x(d.valor) * 4) + 35 }
+             })
+             .text(function(d) { return d.valor; });
+
+      }
+
+
+    function clicked(d) {
+        if (active.node() === this) return reset();
+        active.classed("active", false);
+        active = d3.select(this).classed("active", true);
+
+        var bounds = path.bounds(d),
+        dx = bounds[1][0] - bounds[0][0],
+        dy = bounds[1][1] - bounds[0][1],
+        x = (bounds[0][0] + bounds[1][0]) / 2,
+        y = (bounds[0][1] + bounds[1][1]) / 2,
+        scale = .9 / Math.max(dx / width, dy / height),
+        translate = [width / 2 - scale * x, height / 2 - scale * y];
+
+        g.transition()
+         .duration(750)
+         .style("stroke-width", 1.5 / scale + "px")
+         .attr("transform", "translate(" + translate + ")scale(" + scale + ")");
+
+        var estado = nest.filter(function(a) {
+              return a.key == d.properties.ADMIN_NAME;
+           });
+
+        var anho = d3.select("#anho").node().value;
+
+        hazGrafica(anho, estado);
+
+   }
+
+   function reset() {
+        active.classed("active", false);
+        active = d3.select(null);
+
+        g.transition()
+         .duration(750)
+         .style("stroke-width", "1.5px")
+         .attr("transform", "");
+
+    }
+
+
+  </script>
+</html>
