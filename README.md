@@ -788,9 +788,11 @@ Para comenzar la representación en D3, se esta utilizando el lenguaje HTML, par
 
 Para hacer un mapa en D3, se necesita dos librerías de JavaScrip, que son: D3 y topojson. La primera es la base de D3 y la segunda es una extensión para manejar datos de tipo topoJSON. 
 
--Se define una proyección, coordenadas del centro del mapa y el nivel de zoom:
--Lo primero que vamos a hacer es leer los datos y dibujar un mapa pintando todos los polígonos de un mismo color:
--Se desglosa los _features_ del topoJSON ` features = topojson.feature(datos, datos.objects.clima); `
+- Se define una proyección, coordenadas del centro del mapa y el nivel de zoom.
+
+- Lo primero que vamos a hacer es leer los datos y dibujar un mapa pintando todos los polígonos de un mismo color.
+
+- Se desglosa los _features_ del topoJSON ` features = topojson.feature(datos, datos.objects.clima); `
 
 ```` html
 
@@ -908,3 +910,93 @@ Para hacer un mapa en D3, se necesita dos librerías de JavaScrip, que son: D3 y
 
 ````
 
+- Se hace el despligue o impresión del mapa de acuerdo a la variable seleccionada.
+- Se hace uso de `update` para actualizar los datos.
+
+
+
+
+````html
+
+    function hazMapa(interes){
+
+        var max = d3.max(features.features, function(d) { return d.properties[interes]; })
+
+        var quantizepr = d3.scaleQuantize()
+                         .domain([0, max])
+                         .range(d3.range(5).map(function(i) { return "p" + i; }));
+
+        var quantize = d3.scaleQuantize()
+                       .domain([0, max])
+                       .range(d3.range(5).map(function(i) { return "q" + i; }));
+
+         var mapUpdate = g.selectAll("path")
+                          .data(features.features);
+
+         var mapEnter = mapUpdate.enter();
+
+         mapEnter.append("path")
+                 .merge(mapUpdate)
+                 .attr("d", path)
+                 .attr("class", function(d){
+                   if (d.properties[interes] > 50) {
+                     return quantizepr(d.properties[interes]) }
+                   else { return quantize(d.properties[interes]) }
+                 })
+                 .on("click", clicked);
+    }
+    
+    d = [{nombre: "PR", datos: "0"}, {nombre: "TMIN", datos: "0"}, {nombre: "TMED", datos: "0"}, {nombre: "TMAX", datos: "0"}];
+    var colores = {"PR": "steelblue", "TMIN": "#fcc383", "TMED": "#f4794e", "TMAX": "#ce2a1d"};
+
+    var barWidth = 300,
+      barHeight = 35;
+    var x = d3.scaleLinear()
+            .range([0, barWidth])
+            .domain([0, 300]);
+
+    bar = barSvg.selectAll(".bar")
+              .data(d);
+
+    var barEnter = bar.enter()
+      .append("g")
+      .attr("class", "bar")
+      .attr("transform", function(d, i) { return "translate(0," + i * barHeight + ")"; })
+
+    d3.select("#titulo").html("Variables climáticas a evaluar");
+
+    barEnter.append("rect")
+        .transition()
+        .duration(500)
+        .attr("width", 0 )
+        .attr("height", barHeight - 3)
+        .attr("fill", function(d) { return colores[d.nombre]; });
+
+    barEnter.append("text")
+          .transition()
+          .duration(500)
+          .attr("x", 0)
+          .attr("y", barHeight / 2)
+          .attr("dy", ".35em")
+          .text(function(d) { return d.valor});
+
+    barEnter.append("text")
+          .transition()
+          .duration(500)
+          .attr("x", 10)
+          .attr("y", barHeight / 2)
+          .attr("dy", ".35em")
+          .text(function(d) { return d.nombre });
+
+    bar.select("rect")
+     .transition()
+     .duration(500)
+     .attr("width", 0);
+
+    bar.select("text")
+     .transition()
+     .duration(500)
+     .attr("x", 0)
+     .text(function(d) { return d.valor; });
+
+````
