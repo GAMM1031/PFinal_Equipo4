@@ -1,9 +1,13 @@
 ![img](/img/Fondo.png)
-
+### 
+### 
+### 
+### 
+### 
 
 # Proyecto Final    Equipo4   
 
-# R Studio
+
 
 
 ## Objetivos :
@@ -80,7 +84,8 @@ En el ejemplo de la figura se muestran los resultados para una vecindad de reina
 
 
 
-
+# R Studio
+### 
 ## METODOLOGÍA
 Antes de comenzar, necesitamos cargar (o instalar primero, en caso de que no estén ya instaladas) las librerías que vamos a usar:
 
