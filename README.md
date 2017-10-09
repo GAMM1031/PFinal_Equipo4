@@ -716,7 +716,7 @@ D3 ( Data-Driven Documents o D3.js ) es una biblioteca de JavaScript para visual
   <meta charset="UTF-8">
   <title>Final D3 - DGC, GMM, IJVC</title>
 <style>
-/*Los colores para las variables a representar, rojos*/
+/*Los colores para las clases de población, rojos*/
   .q0 { fill:#fcc383; }
   .q1 { fill:#fc9f67; }
   .q2 { fill:#f4794e; }
@@ -732,14 +732,14 @@ D3 ( Data-Driven Documents o D3.js ) es una biblioteca de JavaScript para visual
 
   #climatica{
     position: absolute;
-    top: 60px;
-    left: 860px;
+    top: 125px;
+    left: 810px;
   }
 
   #anho{
     position: absolute;
-    top: 60px;
-    left: 1160px;
+    top: 125px;
+    left: 1110px;
   }
 
   .background {
@@ -754,20 +754,20 @@ D3 ( Data-Driven Documents o D3.js ) es una biblioteca de JavaScript para visual
   #bars {
     position: absolute;
     margin-top: 150px;
-    margin-left: 50px;
+    margin-left: 5px;
   }
 
   .bar text {
     fill: black;
-    font: 10px verdana;
+    font: 13px verdana;
     font-weight: bold;
     text-anchor: right;
   }
 
   #titulo {
     position: absolute;
-    top: 110px;
-    left: 860px;
+    top: 160px;
+    left: 810px;
     font: 17px verdana;
     font-weight: bold;
   }
@@ -778,7 +778,42 @@ D3 ( Data-Driven Documents o D3.js ) es una biblioteca de JavaScript para visual
 
 ```
 
+###  Se agrega un tema de fondo
 
+
+```html
+<body background="Fondo.png">
+<h2 align="center"> <font size="5" color="black" face = "garamond">
+```
+
+### De igual manera se crean dos selectores que corresponden a la variable climática y al año, así tener mejor uso en la visualización. 
+
+````html  
+  MAPA DE REPRESENTACIÓN DE VARIABLES CLIMÁTICAS POR ESTADO POR AÑO</h2>
+  <select id="climatica" class="select">
+    <option value="PR" selected>Precipitación media anual (PR)</option>
+    <option value="TMIN">Temperatura mínima promedio anual (TMIN)</option>
+    <option value="TMED">Temperatura promedio anual (TMED)</option>
+    <option value="TMAX">Temperatura máxima promedio anual (TMAX)</option>
+  </select>
+  <select id="anho", class="select">
+    <option value="04" selected>2004</option>
+    <option value="05">2005</option>
+    <option value="06">2006</option>
+    <option value="07">2007</option>
+    <option value="08">2008</option>
+    <option value="09">2009</option>
+    <option value="10">2010</option>
+    <option value="11">2011</option>
+    <option value="12">2012</option>
+    <option value="13">2013</option>
+    <option value="14">2014</option>
+    <option value="15">2015</option>
+    <option value="16">2016</option>
+  </select>
+  <div id="titulo"></div>
+</body>
+```
 
 
 
@@ -797,6 +832,9 @@ D3 ( Data-Driven Documents o D3.js ) es una biblioteca de JavaScript para visual
 
   <script src="https://d3js.org/d3.v4.min.js"></script>
   <script src="https://unpkg.com/topojson@3"></script>
+  <script src="https://d3js.org/d3-format.v1.min.js"></script>
+  <script>
+   var format = d3.format(".2f"); </script>
   <script>
 
     var features, nest, bar;
@@ -910,13 +948,7 @@ D3 ( Data-Driven Documents o D3.js ) es una biblioteca de JavaScript para visual
 ````
 
 
-
-
-
-
-
-
-#### - Se hace el despligue o impresión del mapa de acuerdo a la variable seleccionada.
+#### - Se realiza el despligue o impresión del mapa de acuerdo a la variable seleccionada.
 #### - Se hace uso de `update` para actualizar los datos y colores en el mapa.
 
 
@@ -951,7 +983,7 @@ D3 ( Data-Driven Documents o D3.js ) es una biblioteca de JavaScript para visual
                  })
                  .on("click", clicked);
     }
-    
+
     d = [{nombre: "PR", datos: "0"}, {nombre: "TMIN", datos: "0"}, {nombre: "TMED", datos: "0"}, {nombre: "TMAX", datos: "0"}];
     var colores = {"PR": "steelblue", "TMIN": "#fcc383", "TMED": "#f4794e", "TMAX": "#ce2a1d"};
 
@@ -969,7 +1001,7 @@ D3 ( Data-Driven Documents o D3.js ) es una biblioteca de JavaScript para visual
       .attr("class", "bar")
       .attr("transform", function(d, i) { return "translate(0," + i * barHeight + ")"; })
 
-    d3.select("#titulo").html("Variables climáticas a evaluar");
+    d3.select("#titulo").html("Variables climáticas a representar");
 
     barEnter.append("rect")
         .transition()
@@ -1003,29 +1035,21 @@ D3 ( Data-Driven Documents o D3.js ) es una biblioteca de JavaScript para visual
      .transition()
      .duration(500)
      .attr("x", 0)
-     .text(function(d) { return d.valor; });
+     .text(function(d) { d3.format(".2f")(x(d.valor)); });
+
 
 ````
 
 
-
-
-
-
-
-
-### Se agrega una gráfica que este ligada a los datos y al mapa.
-
-
-
-
+### Se agrega una gráfica que este ligada a los datos y al mapa. 
 
 
 
 ````html
-function hazGrafica(anho, estado){
+    function hazGrafica(anho, estado){
         var climaticos = ['PR', 'TMIN', 'TMED', 'TMAX'];
         var datos = [];
+        var f = [];
 
         for (i = 0; i <= 3 ; i++){
             c = {};
@@ -1090,9 +1114,14 @@ function hazGrafica(anho, estado){
                  return x(d.valor)/8 + 35}
                else { return (x(d.valor) * 4) + 35 }
              })
-             .text(function(d) { return d.valor; });
+             .text(function(d) {
+               if ( d.valor > 50) {
+                 return x(d.valor) + " mm de lámina de lluvia"}
+               else { return d3.format(".2f")(x(d.valor)) + " °C" }
+            });
 
       }
+
 ````
 
 
@@ -1139,7 +1168,6 @@ function hazGrafica(anho, estado){
          .attr("transform", "");
 
     }
-
 ````
 
 
