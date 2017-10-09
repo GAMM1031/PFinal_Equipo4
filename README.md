@@ -1,3 +1,4 @@
+
 # Proyecto Final    Equipo4   
 
 # R Studio
@@ -696,8 +697,8 @@ Para lo cual se vuelve hacer uso de las condiciones `if` y `else if`, para poder
 
 [ui]: https://github.com/GAMM1031/PFinal_Equipo4/blob/master/codigos/ui.R
 
+:black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle::black_circle:
 
-############################################################################################
 
 #   					 D3
 
