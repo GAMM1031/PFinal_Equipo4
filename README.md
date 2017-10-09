@@ -1,3 +1,5 @@
+![img](/img/Fondo.png)
+
 
 # Proyecto Final    Equipo4   
 
