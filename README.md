@@ -709,7 +709,7 @@ D3 ( Data-Driven Documents o D3.js ) es una biblioteca de JavaScript para visual
 
 
 
-```html
+````html
 
 <!DOCTYPE html>
 <head>
@@ -775,16 +775,15 @@ D3 ( Data-Driven Documents o D3.js ) es una biblioteca de JavaScript para visual
 
 </style>
 </head>
-
-```
+````
 
 ###  Se agrega un tema de fondo
 
 
-```html
+````html
 <body background="Fondo.png">
 <h2 align="center"> <font size="5" color="black" face = "garamond">
-```
+````
 
 ### De igual manera se crean dos selectores que corresponden a la variable climática y al año, así tener mejor uso en la visualización. 
 
@@ -813,7 +812,7 @@ D3 ( Data-Driven Documents o D3.js ) es una biblioteca de JavaScript para visual
   </select>
   <div id="titulo"></div>
 </body>
-```
+````
 
 
 
@@ -828,7 +827,7 @@ D3 ( Data-Driven Documents o D3.js ) es una biblioteca de JavaScript para visual
 
 
 
-```` html
+````html
 
   <script src="https://d3js.org/d3.v4.min.js"></script>
   <script src="https://unpkg.com/topojson@3"></script>
