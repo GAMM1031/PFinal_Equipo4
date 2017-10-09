@@ -697,15 +697,9 @@ Para lo cual se vuelve hacer uso de las condiciones `if` y `else if`, para poder
 [ui]: https://github.com/GAMM1031/PFinal_Equipo4/blob/master/codigos/ui.R
 
 
+############################################################################################
 
-
-
-
-
-
-
-
-# D3
+#   					 D3
 
 D3 ( Data-Driven Documents o D3.js ) es una biblioteca de JavaScript para visualizar datos utilizando estándares web. Ayuda a llevar los datos usando SVG, CANVAS y HTML. También combina poderosas técnicas de visualización e interacción con un enfoque basado en datos para la manipulación DOM, ofreciéndole las capacidades completas de los navegadores modernos y la libertad de diseñar la interfaz visual adecuada para sus datos.
 
@@ -922,8 +916,8 @@ D3 ( Data-Driven Documents o D3.js ) es una biblioteca de JavaScript para visual
 
 
 
-- Se hace el despligue o impresión del mapa de acuerdo a la variable seleccionada.
-- Se hace uso de `update` para actualizar los datos y colores en el mapa.
+#### - Se hace el despligue o impresión del mapa de acuerdo a la variable seleccionada.
+#### - Se hace uso de `update` para actualizar los datos y colores en el mapa.
 
 
 
@@ -1102,7 +1096,6 @@ function hazGrafica(anho, estado){
 ````
 
 
-Aquí ligamos el clic a la función clicked que es donde vamos a programar la magia del zoom:
 
 ### Se agrega la función  `clicked` que servirá para hacer un zoom, dependiendo del polígono donde se de "click", posteriormente la función ` reset `   que hacer click dentro de un mismmo poligono 2 veces, nos retornará el zoom a la vista original.
 
