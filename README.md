@@ -1126,7 +1126,7 @@ D3 ( Data-Driven Documents o D3.js ) es una biblioteca de JavaScript para visual
 
 
 
-### Se agrega la función  `clicked` que servirá para hacer un zoom, dependiendo del polígono donde se de "click", posteriormente la función ` reset `   que hacer click dentro de un mismmo poligono 2 veces, nos retornará el zoom a la vista original.
+### Se agrega la función  `clicked` que servirá para hacer un zoom, dependiendo del polígono donde se de "click", posteriormente la función ` reset `  servirá para regresar al zoom de la vista original, esto se podrá realizar al hacer doble click dentro de un mismo poligono.
 
 
 ````html
