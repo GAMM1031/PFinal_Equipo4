@@ -1,8 +1,7 @@
 ![img](/img/Fondo.png)
 #
 #
-#
-#
+
 
 # Proyecto Final    Equipo4   
 
@@ -16,7 +15,7 @@ Este proyecto está enfocado en realizar un estudio del comportamiento de las va
 
 -	Comportamiento Anual de las variables climáticas a partir de la evaluación de indicadores de Asociación Espacial (LISA), para diferentes tipos matrices de vecindades y distancias.
 
-## 
+
 
 
 ## Materiales Utilizados:
