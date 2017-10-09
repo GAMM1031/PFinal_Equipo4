@@ -786,6 +786,8 @@ Para comenzar la representación en D3, se esta utilizando el lenguaje HTML, par
 
 
 
+
+
 Para hacer un mapa en D3, se necesita dos librerías de JavaScrip, que son: D3 y topojson. La primera es la base de D3 y la segunda es una extensión para manejar datos de tipo topoJSON. 
 
 - Se define una proyección, coordenadas del centro del mapa y el nivel de zoom.
@@ -793,6 +795,9 @@ Para hacer un mapa en D3, se necesita dos librerías de JavaScrip, que son: D3 y
 - Lo primero que vamos a hacer es leer los datos y dibujar un mapa pintando todos los polígonos de un mismo color.
 
 - Se desglosa los _features_ del topoJSON ` features = topojson.feature(datos, datos.objects.clima); `
+
+
+
 
 ```` html
 
@@ -910,8 +915,15 @@ Para hacer un mapa en D3, se necesita dos librerías de JavaScrip, que son: D3 y
 
 ````
 
+
+
+
+
+
+
+
 - Se hace el despligue o impresión del mapa de acuerdo a la variable seleccionada.
-- Se hace uso de `update` para actualizar los datos.
+- Se hace uso de `update` para actualizar los datos y colores en el mapa.
 
 
 
@@ -999,4 +1011,92 @@ Para hacer un mapa en D3, se necesita dos librerías de JavaScrip, que son: D3 y
      .attr("x", 0)
      .text(function(d) { return d.valor; });
 
+````
+
+
+
+
+
+
+
+
+### Se agrega una gráfica que este ligada a los datos y al mapa.
+
+
+
+
+
+
+
+````html
+function hazGrafica(anho, estado){
+        var climaticos = ['PR', 'TMIN', 'TMED', 'TMAX'];
+        var datos = [];
+
+        for (i = 0; i <= 3 ; i++){
+            c = {};
+            c["nombre"] = climaticos[i];
+            c["valor"] = estado[0].value[climaticos[i]+anho];
+            datos.push(c);
+        }
+
+        var barWidth = 300,
+              barHeight = 35;
+          var x = d3.scaleLinear()
+                    .range([0, barWidth])
+                    .domain([0, 300]);
+
+          bar = barSvg.selectAll(".bar")
+                      .data(datos, function(d){ return d.nombre;});
+
+          var barEnter = bar.enter()
+              .append("g")
+              .attr("class", "bar")
+              .attr("transform", function(d, i) { return "translate(0," + i * barHeight + ")"; })
+
+          d3.select("#titulo").html("Variables climáticas del Estado de " + estado[0].key.substr(0,20) + " 20" + anho);
+
+          barEnter.append("rect")
+              .transition()
+              .duration(500)
+              .attr("width", function(d) { return x(d.valor); })
+              .attr("height", barHeight - 3)
+              .attr("fill", function(d) { return colores[d.nombre]; });
+
+          barEnter.append("text")
+                  .transition()
+                  .duration(500)
+                  .attr("x", function(d) { return x(d.valor) + 35; })
+                  .attr("y", barHeight / 2)
+                  .attr("dy", ".35em")
+                  .text(function(d) { return d.valor});
+
+          barEnter.append("text")
+                  .transition()
+                  .duration(500)
+                  .attr("x", 10 )
+                  .attr("y", barHeight / 2)
+                  .attr("dy", ".35em")
+                  .text(function(d) { return d.nombre });
+
+          bar.select("rect")
+             .transition()
+             .duration(500)
+             .attr("width", function(d) {
+               if ( d.valor > 50) {
+                 return x(d.valor)/8}
+               else { return x(d.valor) * 4 }
+            });
+
+          bar.select("text")
+             .transition()
+             .duration(500)
+             .attr("x", function(d) {
+               if (d.valor > 50) {
+                 return x(d.valor)/8 + 35}
+               else { return (x(d.valor) * 4) + 35 }
+             })
+             .text(function(d) { return d.valor; });
+
+      }
 ````
