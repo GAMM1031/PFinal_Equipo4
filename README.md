@@ -1,4 +1,4 @@
-![img](/img/Fondo.png)
+![img](/img/Fondo.PNG)
 #
 #
 
