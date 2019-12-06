@@ -3,7 +3,7 @@
 #
 
 
-# Proyecto Final Analítica Geovisuale 
+# Proyecto Final Analítica Geovisual
 
 
 
