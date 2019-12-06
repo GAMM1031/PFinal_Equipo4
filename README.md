@@ -15,7 +15,7 @@ Diseñar un recurso de analítica geovisual en la librería Leaflet que permita 
 
 
 
-## Materiales Utilizados:
+## Datos y herramientas utilizados:
 
 Para la elaboración de este visualizador se utilizó la libreria de Leaflet.
 
@@ -25,7 +25,7 @@ Los datos utilizados para el caso de eventos de sismos fueron extraídos del sit
 # fALTA **** Resultados obtenidos:
 
 
-### Mapas de Comportamiento de las variables climáticas
+### Mapas de Sismos
 
 En este caso se obtuvo mapas interactivos con shinny los cuales permiten ser filtrados por tiempo a través del uso de un slide por años y un panel de selección para cada tipo de variables, el resultado de la selección es mostrado en un mapa que representa el comportamiento de las diferentes variables utilizando una escala en función del tipo de variable cuya leyenda es mostrada en el mapa. Además, en una segunda parte de la página se presenta el resultado de las variables en una gráfica de barras, en función del estado seleccionado
 
