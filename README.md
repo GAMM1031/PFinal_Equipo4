@@ -3,30 +3,26 @@
 #
 
 
-# Proyecto Final    Equipo4   
+# Proyecto Final Analítica Geovisual 
 
 
 
 
 ## Objetivos :
-Este proyecto está enfocado en realizar un estudio del comportamiento de las variables climáticas de Precipitación y Temperatura a partir de una serie histórica que comprende el periodo 2004-2016, las variables son estudiadas a partir de la obtención de:
+Diseñar un recurso de analítica geovisual en la librería Leaflet que permita identificar los principales fenómenos de origen geológico (sismos) e hidrometeorológico (ciclones tropicales) en el estado de Guerrero mediante herramientas y técnicas de programación con el fin de comunicar la información de manera dinámica, oportuna y didáctica a estudiantes, investigadores, tomadores de decisiones y público en general. 
 
--	Los mapas del comportamiento Anual de las variables Precipitaciones, Temperatura Media, Temperatura Mínima, Temperatura Máxima.
-
--	Comportamiento Anual de las variables climáticas a partir de la evaluación de indicadores de Asociación Espacial (LISA), para diferentes tipos matrices de vecindades y distancias.
 
 
 
 
 ## Materiales Utilizados:
 
-Para la confección de estos mapas, fue utilizada R-Studio Versión 1.0.153 – © 2009-2017 RStudio, Inc.
+Para la elaboración de este visualizador se utilizó la libreria de Leaflet.
 
-Los datos fueron extraídos del sitio oficial del Servicio Meteorológico Nacional (SMN), a partir del de sus reportes de resúmenes Mensuales de Temperaturas y Lluvia publicado y accedido a través del enlace: http://smn.cna.gob.mx/es/climatologia/temperaturas-y-lluvias/resumenes-mensuales-de-temperaturas-y-lluvias
+Los datos utilizados para el caso de eventos de sismos fueron extraídos del sitio oficial del Servicios Geológico de los Estados Unidos (USGS) y de trayectorias de ciclones trópicales por medio del Centro Nacional de Información Ambiental-NOAA.
 
 
-
-# Resultados obtenidos:
+# fALTA **** Resultados obtenidos:
 
 
 ### Mapas de Comportamiento de las variables climáticas
